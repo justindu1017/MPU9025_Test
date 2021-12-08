@@ -9,7 +9,7 @@ plt.style.use('ggplot') # matplotlib visual style setting
 
 time.sleep(1) # wait for mpu9250 sensor to settle
 
-ii = 1000 # number of points
+ii = 3000 # number of points
 t1 = time.time() # for calculating sample rate
 
 # prepping for visualization
