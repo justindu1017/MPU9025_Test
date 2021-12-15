@@ -1,0 +1,7 @@
+loc = inner left leg
+dir when stand:
+x point front
+y point up
+
+30000 points
+sr = 200

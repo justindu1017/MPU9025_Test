@@ -9,7 +9,7 @@ plt.style.use('ggplot') # matplotlib visual style setting
 
 time.sleep(1) # wait for mpu9250 sensor to settle
 
-ii = 3000 # number of points
+ii = 30000 # number of points
 t1 = time.time() # for calculating sample rate
 
 # prepping for visualization
@@ -20,7 +20,7 @@ mpu6050_ACCEL_vec,mpu6050_GYRO_vec,AK8963_vec,t_vec = [],[],[],[]
 
 print('recording data')
 for ii in range(0,ii):
-    
+    print(ii)
     try:
         ax,ay,az,wx,wy,wz = mpu6050_conv() # read and convert mpu6050 data
         mx,my,mz = AK8963_conv() # read and convert AK8963 magnetometer data
