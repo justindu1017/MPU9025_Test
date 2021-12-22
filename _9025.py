@@ -3,13 +3,17 @@ import smbus,time,datetime
 import numpy as np
 import matplotlib.pyplot as plt
 import writeCSV
+import time
 
-def start():
+
+def start(queueReturn, points):
+    start = time.time()
+
     plt.style.use('ggplot') # matplotlib visual style setting
 
     time.sleep(1) # wait for mpu9250 sensor to settle
 
-    ii = 300 # number of points
+    ii = points # number of points
     t1 = time.time() # for calculating sample rate
 
     # prepping for visualization
@@ -18,9 +22,8 @@ def start():
     AK8963_str = ['mag-x','mag-y','mag-z']
     mpu6050_ACCEL_vec,mpu6050_GYRO_vec,AK8963_vec,t_vec = [],[],[],[]
 
-    print('recording data')
+    print('geting data')
     for ii in range(0,ii):
-        print(ii)
         try:
             ax,ay,az,wx,wy,wz = mpu6050_conv() # read and convert mpu6050 data
             mx,my,mz = AK8963_conv() # read and convert AK8963 magnetometer data
@@ -34,12 +37,22 @@ def start():
     print('sample rate accel: {} Hz'.format(ii/(time.time()-t1))) # print the sample rate
     t_vec = np.subtract(t_vec,t_vec[0])
 
+    # UserWarning: Starting a Matplotlib GUI outside of the main thread will likely fail.
+    # return to main thread to plot
 
-    # plot the resulting data in 3-subplots, with each data axis
-    # fig,axs = plt.subplots(3,3,figsize=(12,7),sharex=True)
+    queueReturn.put(mpu6050_ACCEL_str)
+    queueReturn.put(mpu6050_GYRO_str)
+    queueReturn.put(AK8963_str)
+    queueReturn.put(mpu6050_ACCEL_vec)
+    queueReturn.put(mpu6050_GYRO_vec)
+    queueReturn.put(AK8963_vec)
+    queueReturn.put(t_vec)
+    end = time.time()
+    print("_9025 time = ", end-start)
+
+    return
 
 
-    
     # ===============================================================================
     # fig,axs = plt.subplots(3,1,sharex=True)
 
@@ -54,11 +67,13 @@ def start():
     #     axs[zz].set_ylabel('Acceleration [g]',fontsize=12)
 
     # fig.align_ylabels(axs)
-    # plt.show()
+    # fig.set_size_inches(18, 10)
+    # fig.savefig('test1.png', dpi=100)
+    # plt.close(fig)
+    # # plt.show()
 
     # fig,axs = plt.subplots(3,1,sharex=True)
 
-    # cmap = plt.cm.Set1
     # # ax2 = axs[1] # plot gyroscope data
     # for zz in range(0,np.shape(mpu6050_GYRO_vec)[1]):
     #     data_vec = [ii[zz] for ii in mpu6050_GYRO_vec]
@@ -67,11 +82,13 @@ def start():
     #     axs[zz].set_ylabel('Angular Vel. [dps]',fontsize=12)
 
     # fig.align_ylabels(axs)
-    # plt.show()
+    # fig.set_size_inches(18, 10)
+    # fig.savefig('test2.png', dpi=100)
+    # plt.close(fig)
+    # # plt.show()
 
     # fig,axs = plt.subplots(3,1,sharex=True)
 
-    # cmap = plt.cm.Set1
 
     # # ax3 = axs[2] # plot magnetometer data
     # for zz in range(0,np.shape(AK8963_vec)[1]):
@@ -82,8 +99,10 @@ def start():
     #     axs[zz].set_xlabel('Time [s]',fontsize=14)
 
     # fig.align_ylabels(axs)
+    # fig.set_size_inches(18, 10)
+    # fig.savefig('test3.png', dpi=100)
+    # plt.close(fig)
     # plt.show()
     # ===============================================================================
 
-    writeCSV.writeToCSV(mpu6050_ACCEL_vec, mpu6050_GYRO_vec, AK8963_vec)
-    print("FINISH")
+    
