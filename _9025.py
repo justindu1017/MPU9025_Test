@@ -1,17 +1,15 @@
-from mpu9250_i2c import *
+from mpu9250_i2c import mpu6050_conv, AK8963_conv
 import smbus,time,datetime
 import numpy as np
-import matplotlib.pyplot as plt
-import writeCSV
 import time
 
 
 def start(queueReturn, points):
     start = time.time()
 
-    plt.style.use('ggplot') # matplotlib visual style setting
+    # plt.style.use('ggplot') # matplotlib visual style setting
 
-    time.sleep(1) # wait for mpu9250 sensor to settle
+    # time.sleep(1) # wait for mpu9250 sensor to settle
 
     ii = points # number of points
     t1 = time.time() # for calculating sample rate

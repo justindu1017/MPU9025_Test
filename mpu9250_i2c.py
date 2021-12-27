@@ -128,6 +128,7 @@ def AK8963_conv():
 
 
 # MPU6050 Registers
+
 MPU6050_ADDR = 0x68
 PWR_MGMT_1 = 0x6B
 SMPLRT_DIV = 0x19
@@ -156,3 +157,4 @@ mag_sens = 4900.0  # magnetometer sensitivity: 4800 uT
 bus = smbus.SMBus(1)  # start comm with i2c bus
 gyro_sens, accel_sens = MPU6050_start()  # instantiate gyro/accel
 AK8963_start()  # instantiate magnetometer
+print("Setup OK!!!")

@@ -5,7 +5,9 @@ import recorder
 import _9025
 import writeCSV
 import queue
-
+import os 
+import cv2
+from mpu9250_i2c import *
 
 
 def plotSave(mpu6050_ACCEL_str,mpu6050_GYRO_str,AK8963_str, mpu6050_ACCEL_vec,mpu6050_GYRO_vec,AK8963_vec,t_vec):
@@ -59,10 +61,28 @@ def plotSave(mpu6050_ACCEL_str,mpu6050_GYRO_str,AK8963_str, mpu6050_ACCEL_vec,mp
     plt.close(fig)
 
 
+def setCamera():
+    recorded_Loc = os.getenv("recorded_Loc")
+    
+    # recording setup
+    video = cv2.VideoCapture(0)
+    video.set(cv2.CAP_PROP_BUFFERSIZE, 10)
+    vid_cod = cv2.VideoWriter_fourcc(*'mp4v')
+
+    # fps = 20
+    # video size = (640, 480)
+    output = cv2.VideoWriter(recorded_Loc, vid_cod, 20.0, (640, 480))
+    return video, output
+
+
 if __name__ == "__main__":
+
+
+    video, output = setCamera()
+
     queueReturn = queue.Queue()
     t = threading.Thread(target=_9025.start, args=(queueReturn, 3000))
-    t2 = threading.Thread(target=recorder.main, args=(t, ))
+    t2 = threading.Thread(target=recorder.main, args=(t,video, output, ))
     t.start()
     t2.start()
     t.join()
