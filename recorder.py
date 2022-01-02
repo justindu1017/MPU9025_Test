@@ -1,15 +1,15 @@
-import cv2
-import threading
+# import cv2
+# import threading
 import time
-import os
-from dotenv import load_dotenv
+# import os
+# from dotenv import load_dotenv
 
 
-def main(_9025Thread,video, output):
+def main(_9025Thread,video, output, queueReturn_Video):
 
     # time.sleep(0.1)
     # video name in env
-    load_dotenv()
+    # load_dotenv()
 
     # frame counter
     i = 0
@@ -34,6 +34,7 @@ def main(_9025Thread,video, output):
     video.release()
     output.release()
     print("video time = ", end-start)
+    queueReturn_Video.put(end-start)
 
     return
     # cv2.destroyAllWindows()

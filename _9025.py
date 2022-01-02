@@ -5,7 +5,6 @@ import time
 
 
 def start(queueReturn, points):
-    start = time.time()
 
     # plt.style.use('ggplot') # matplotlib visual style setting
 
@@ -31,10 +30,10 @@ def start(queueReturn, points):
         AK8963_vec.append([mx,my,mz])
         mpu6050_ACCEL_vec.append([ax,ay,az])
         mpu6050_GYRO_vec.append([wx,wy,wz])
-
-    print('sample rate accel: {} Hz'.format(ii/(time.time()-t1))) # print the sample rate
+    totalTime = time.time()-t1
+    sample_Rate = ii/(totalTime)
+    print('sample rate accel: {} Hz'.format(sample_Rate)) # print the sample rate
     t_vec = np.subtract(t_vec,t_vec[0])
-
     # UserWarning: Starting a Matplotlib GUI outside of the main thread will likely fail.
     # return to main thread to plot
 
@@ -45,8 +44,11 @@ def start(queueReturn, points):
     queueReturn.put(mpu6050_GYRO_vec)
     queueReturn.put(AK8963_vec)
     queueReturn.put(t_vec)
-    end = time.time()
-    print("_9025 time = ", end-start)
+    queueReturn.put(sample_Rate)
+    queueReturn.put(totalTime)
+    
+
+    print("_9025 time = ", totalTime)
 
     return
 

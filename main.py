@@ -8,25 +8,30 @@ import queue
 import os 
 import cv2
 from mpu9250_i2c import *
+from dotenv import load_dotenv
+import math
 
 
 def plotSave(mpu6050_ACCEL_str,mpu6050_GYRO_str,AK8963_str, mpu6050_ACCEL_vec,mpu6050_GYRO_vec,AK8963_vec,t_vec):
     fig,axs = plt.subplots(3,1,sharex=True)
-
+    # x_Axis = list(range(math.floor(t_vec[-1])+1))
+    x_Axis = [(a/2) for a in (range(2*(math.floor(t_vec[-1])+1)))]
     cmap = plt.cm.Set1
-
-    ax = axs[0] # plot accelerometer data
+    
+    # ax = axs[0] # plot accelerometer data
 
     for zz in range(0,np.shape(mpu6050_ACCEL_vec)[1]):
         data_vec = [ii[zz] for ii in mpu6050_ACCEL_vec]
         # plt.xticks(t_vec)
         axs[zz].plot(t_vec,data_vec,label=mpu6050_ACCEL_str[zz],color=cmap(zz))
         axs[zz].legend(bbox_to_anchor=(1.12,0.9))
+        axs[zz].set_xticks(x_Axis, minor=False)
+        axs[zz].tick_params(axis="x", labelsize=12) 
         axs[zz].set_ylabel('Acceleration [g]',fontsize=12)
 
     fig.align_ylabels(axs)
     fig.set_size_inches(18, 10)
-    fig.savefig('./output/test1.png', dpi=100)
+    fig.savefig('./output/accel.png', dpi=100)
     plt.close(fig)
     # plt.show()
 
@@ -37,11 +42,13 @@ def plotSave(mpu6050_ACCEL_str,mpu6050_GYRO_str,AK8963_str, mpu6050_ACCEL_vec,mp
         data_vec = [ii[zz] for ii in mpu6050_GYRO_vec]
         axs[zz].plot(t_vec,data_vec,label=mpu6050_GYRO_str[zz],color=cmap(zz))
         axs[zz].legend(bbox_to_anchor=(1.12,0.9))
+        axs[zz].set_xticks(x_Axis, minor=False)
+        axs[zz].tick_params(axis="x", labelsize=12) 
         axs[zz].set_ylabel('Angular Vel. [dps]',fontsize=12)
 
     fig.align_ylabels(axs)
     fig.set_size_inches(18, 10)
-    fig.savefig('./output/test2.png', dpi=100)
+    fig.savefig('./output/gyro.png', dpi=100)
     plt.close(fig)
     # plt.show()
 
@@ -53,12 +60,14 @@ def plotSave(mpu6050_ACCEL_str,mpu6050_GYRO_str,AK8963_str, mpu6050_ACCEL_vec,mp
         data_vec = [ii[zz] for ii in AK8963_vec]
         axs[zz].plot(t_vec,data_vec,label=AK8963_str[zz],color=cmap(zz+6))
         axs[zz].legend(bbox_to_anchor=(1.12,0.9))
+        axs[zz].set_xticks(x_Axis, minor=False)
+        axs[zz].tick_params(axis="x", labelsize=12) 
         axs[zz].set_ylabel('Magn. Field [Î¼T]',fontsize=12)
         axs[zz].set_xlabel('Time [s]',fontsize=14)
 
     fig.align_ylabels(axs)
     fig.set_size_inches(18, 10)
-    fig.savefig('./output/test3.png', dpi=100)
+    fig.savefig('./output/meg.png', dpi=100)
     plt.close(fig)
 
 
@@ -83,32 +92,44 @@ def setPath(path):
     except:
         print("Err when createing output folder!!!!!!")
         exit
-        
-if __name__ == "__main__":
-    outputPath = r"./output"
 
-    setPath(path=outputPath)
+if __name__ == "__main__":
+    load_dotenv()
+    
+    num_of_points = 1000
+    setPath(path=os.getenv("output_Path"))
     video, output = setCamera()
 
-    queueReturn = queue.Queue()
-    t = threading.Thread(target=_9025.start, args=(queueReturn, 3000))
-    t2 = threading.Thread(target=recorder.main, args=(t,video, output, ))
+    queueReturn_9025 = queue.Queue()
+    queueReturn_Video = queue.Queue()
+
+    t = threading.Thread(target=_9025.start, args=(queueReturn_9025, num_of_points))
+    t2 = threading.Thread(target=recorder.main, args=(t,video, output, queueReturn_Video, ))
     t.start()
     t2.start()
     t.join()
     t2.join()
 
     
-    mpu6050_ACCEL_str = queueReturn.get()
-    mpu6050_GYRO_str = queueReturn.get()
-    AK8963_str = queueReturn.get()
-    mpu6050_ACCEL_vec = queueReturn.get()
-    mpu6050_GYRO_vec = queueReturn.get()
-    AK8963_vec = queueReturn.get()
-    t_vec = queueReturn.get()
-    sample_rate = queueReturn.get()
+    mpu6050_ACCEL_str = queueReturn_9025.get()
+    mpu6050_GYRO_str = queueReturn_9025.get()
+    AK8963_str = queueReturn_9025.get()
+    mpu6050_ACCEL_vec = queueReturn_9025.get()
+    mpu6050_GYRO_vec = queueReturn_9025.get()
+    AK8963_vec = queueReturn_9025.get()
+    t_vec = queueReturn_9025.get()
+    sample_rate = queueReturn_9025.get()
+    Time9025 = queueReturn_9025.get()
 
     plotSave(mpu6050_ACCEL_str,mpu6050_GYRO_str,AK8963_str, mpu6050_ACCEL_vec,mpu6050_GYRO_vec,AK8963_vec,t_vec)
     writeCSV.writeToCSV(mpu6050_ACCEL_vec, mpu6050_GYRO_vec, AK8963_vec)
-    with open()
+    with open(os.getenv("infoFile"), "w") as f:
+        f.write("The sample rate is: "+ str(sample_rate))
+        f.write("\nrecorded point: "+ str(num_of_points))
+        f.write("\ntotal reoceded time: "+ str(queueReturn_Video.get()))
+        f.write("\ntotal reoceded time: "+ str(Time9025))
+        f.write("\n\n\n\n\nHave a nice dayyyyyyy")
+
+        
+
     print("FINISH")

@@ -1,8 +1,8 @@
 import os
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 import pandas as pd
 import numpy as np
-load_dotenv() 
+# load_dotenv() 
 def writeToCSV(mpu6050_ACCEL_vec, mpu6050_GYRO_vec, AK8963_vec):
 
     fileRoute = os.getenv("path_csv")

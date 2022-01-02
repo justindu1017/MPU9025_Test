@@ -1,5 +1,12 @@
-import os 
-print(os.path.isdir(r"./UIUI"))
+from matplotlib.pyplot import step
+
+
+a = [x * 0.1 for x in range(0, 10)]
+
+print(a)
+
+# import os 
+# print(os.path.isdir(r"./UIUI"))
 
 
 
