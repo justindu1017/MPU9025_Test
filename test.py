@@ -1,21 +1,29 @@
-import queue
+import os 
+print(os.path.isdir(r"./UIUI"))
 
-queue = queue.queue()
-thread_ = threading.Thread(
-                target=target_method,
-                name="Thread1",
-                args=[params, queue],
-                )
-thread_.start()
-thread_.join()
-queue.get()
 
-def target_method(self, params, queue):
- """
- Some operations right here
- """
- your_return = "Whatever your object is"
- queue.put(your_return)
+
+
+
+
+# import queue
+
+# queue = queue.queue()
+# thread_ = threading.Thread(
+#                 target=target_method,
+#                 name="Thread1",
+#                 args=[params, queue],
+#                 )
+# thread_.start()
+# thread_.join()
+# queue.get()
+
+# def target_method(self, params, queue):
+#  """
+#  Some operations right here
+#  """
+#  your_return = "Whatever your object is"
+#  queue.put(your_return)
 
 
 # import threading

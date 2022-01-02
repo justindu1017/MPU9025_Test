@@ -19,6 +19,7 @@ def plotSave(mpu6050_ACCEL_str,mpu6050_GYRO_str,AK8963_str, mpu6050_ACCEL_vec,mp
 
     for zz in range(0,np.shape(mpu6050_ACCEL_vec)[1]):
         data_vec = [ii[zz] for ii in mpu6050_ACCEL_vec]
+        # plt.xticks(t_vec)
         axs[zz].plot(t_vec,data_vec,label=mpu6050_ACCEL_str[zz],color=cmap(zz))
         axs[zz].legend(bbox_to_anchor=(1.12,0.9))
         axs[zz].set_ylabel('Acceleration [g]',fontsize=12)
@@ -74,10 +75,19 @@ def setCamera():
     output = cv2.VideoWriter(recorded_Loc, vid_cod, 20.0, (640, 480))
     return video, output
 
-
+def setPath(path):
+    try:
+        if(not os.path.isdir(path)):
+            os.mkdir(path)
+        
+    except:
+        print("Err when createing output folder!!!!!!")
+        exit
+        
 if __name__ == "__main__":
+    outputPath = r"./output"
 
-
+    setPath(path=outputPath)
     video, output = setCamera()
 
     queueReturn = queue.Queue()
@@ -96,7 +106,9 @@ if __name__ == "__main__":
     mpu6050_GYRO_vec = queueReturn.get()
     AK8963_vec = queueReturn.get()
     t_vec = queueReturn.get()
+    sample_rate = queueReturn.get()
 
     plotSave(mpu6050_ACCEL_str,mpu6050_GYRO_str,AK8963_str, mpu6050_ACCEL_vec,mpu6050_GYRO_vec,AK8963_vec,t_vec)
     writeCSV.writeToCSV(mpu6050_ACCEL_vec, mpu6050_GYRO_vec, AK8963_vec)
+    with open()
     print("FINISH")
