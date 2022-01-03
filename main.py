@@ -15,11 +15,14 @@ import datetime
 
 
 
-
 def plotSave(mpu6050_ACCEL_str,mpu6050_GYRO_str,AK8963_str, mpu6050_ACCEL_vec,mpu6050_GYRO_vec,AK8963_vec,t_vec):
+    grid_Partition = os.getenv("grid_Partition")
     fig,axs = plt.subplots(3,1,sharex=True)
     # x_Axis = list(range(math.floor(t_vec[-1])+1))
-    x_Axis = [(a/2) for a in (range(2*(math.floor(t_vec[-1])+1)))]
+    # x_Axis = [(a/2) for a in (range(2*(math.floor(t_vec[-1])+1)))]
+    # x_Axis = [(a/int(grid_Partition)) for a in (range(int(grid_Partition)*(math.floor(t_vec[-1])+1)))]
+    x_Axis = np.linspace(0, math.floor(t_vec[-1])+1, int(os.getenv("grid_Partition"))+1)
+
     cmap = plt.cm.Set1
     
     # ax = axs[0] # plot accelerometer data

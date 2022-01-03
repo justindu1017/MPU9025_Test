@@ -1,5 +1,13 @@
-import datetime 
-print(datetime.datetime.now())
+import numpy as np
+
+print(np.linspace(0,20,11,endpoint=True))
+
+
+
+
+
+# import datetime 
+# print(datetime.datetime.now())
 
 
 
