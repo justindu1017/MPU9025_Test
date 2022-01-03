@@ -1,9 +1,32 @@
-from matplotlib.pyplot import step
+import datetime 
+print(datetime.datetime.now())
 
 
-a = [x * 0.1 for x in range(0, 10)]
 
-print(a)
+
+
+# print(float(2))
+
+
+# from matplotlib.pyplot import step
+# import os 
+# from dotenv import load_dotenv
+
+# load_dotenv()
+
+# gyro = {"250": 0b00000, "500": 0b010000, "1000": 0b10000, "2000": 0b11000}
+
+# try:
+#     print(gyro[os.getenv("gyroVal")])
+# except:
+#     print("ERRRR")
+# print(gyro["500"])
+
+
+
+# a = [x * 0.1 for x in range(0, 10)]
+
+# print(a)
 
 # import os 
 # print(os.path.isdir(r"./UIUI"))

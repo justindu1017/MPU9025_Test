@@ -25,47 +25,35 @@ def MPU6050_start():
     bus.write_byte_data(MPU6050_ADDR, CONFIG, 0)
     time.sleep(0.1)
     # Write to Gyro configuration register
-    # gyro_config_sel = [0b00000, 0b010000, 0b10000, 0b11000]  # byte registers
-    # gyro_config_vals = [250.0, 500.0, 1000.0, 2000.0]  # degrees/sec
-    gyro = {"250": 0b00000, "500": 0b010000, "1000": 0b10000, "2000": 0b11000}
+    gyro_config_sel = [0b00000, 0b010000, 0b10000, 0b11000]  # byte registers
+    gyro_config_vals = [250.0, 500.0, 1000.0, 2000.0]  # degrees/sec
+
 
 
     ############################################################################################################################ 
     gyro_indx = 0
     ############################################################################################################################ 
 
-    try:
-        bus.write_byte_data(MPU6050_ADDR, GYRO_CONFIG,
-                            int(gyro[os.getenv("gyroVal")]))
-    except:
-        print("Err when setting gyroVal!!!")
-        exit
+
+    bus.write_byte_data(MPU6050_ADDR, GYRO_CONFIG,
+                        int(gyro_config_sel[gyro_indx]))
     time.sleep(0.1)
     # Write to Accel configuration register
-    # accel_config_sel = [0b00000, 0b01000, 0b10000, 0b11000]  # byte registers
-    # accel_config_vals = [2.0, 4.0, 8.0, 16.0]  # g (g = 9.81 m/s^2)
-    accel = {"2": 0b00000, "4": 0b010000, "8": 0b10000, "16": 0b11000}
+    accel_config_sel = [0b00000, 0b01000, 0b10000, 0b11000]  # byte registers
+    accel_config_vals = [2.0, 4.0, 8.0, 16.0]  # g (g = 9.81 m/s^2)
 
 
     ############################################################################################################################ 
     accel_indx = 2
     ############################################################################################################################ 
 
-    try:
-        bus.write_byte_data(MPU6050_ADDR, ACCEL_CONFIG,
-                        int(accel[os.getenv("accelVal")]))
-    except:
-        print("Err when setting accelVal!!!")
-        exit
-
-
-
-
+    bus.write_byte_data(MPU6050_ADDR, ACCEL_CONFIG,
+                        int(accel_config_sel[accel_indx]))
     time.sleep(0.1)
     # interrupt register (related to overflow of data [FIFO])
     bus.write_byte_data(MPU6050_ADDR, INT_ENABLE, 1)
     time.sleep(0.1)
-    return float(os.getenv("gyroVal")), float(os.getenv("accelVal"))
+    return gyro_config_vals[gyro_indx], accel_config_vals[accel_indx]
 
 
 def read_raw_bits(register):
@@ -156,7 +144,6 @@ def AK8963_conv():
 # MPU6050 Registers
 
 
-load_dotenv()
 
 
 MPU6050_ADDR = 0x68

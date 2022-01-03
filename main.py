@@ -10,6 +10,10 @@ import cv2
 from mpu9250_i2c import *
 from dotenv import load_dotenv
 import math
+import datetime
+
+
+
 
 
 def plotSave(mpu6050_ACCEL_str,mpu6050_GYRO_str,AK8963_str, mpu6050_ACCEL_vec,mpu6050_GYRO_vec,AK8963_vec,t_vec):
@@ -122,13 +126,18 @@ if __name__ == "__main__":
     Time9025 = queueReturn_9025.get()
 
     plotSave(mpu6050_ACCEL_str,mpu6050_GYRO_str,AK8963_str, mpu6050_ACCEL_vec,mpu6050_GYRO_vec,AK8963_vec,t_vec)
+    with open(os.getenv("path_csv"), "w") as f:
+        f.write("########## The sample rate is: "+ str(sample_rate))
+        f.write("\n########## recorded point: "+ str(num_of_points))
+        f.write("\n########## total reoceded time: "+ str(queueReturn_Video.get()))
+        f.write("\n########## total 9025 time: "+ str(Time9025))
+        f.write("\n########## time Stemp: "+ str(datetime.datetime.now()))
+        f.write("\n\n")
+
+
+
+
     writeCSV.writeToCSV(mpu6050_ACCEL_vec, mpu6050_GYRO_vec, AK8963_vec)
-    with open(os.getenv("infoFile"), "w") as f:
-        f.write("The sample rate is: "+ str(sample_rate))
-        f.write("\nrecorded point: "+ str(num_of_points))
-        f.write("\ntotal reoceded time: "+ str(queueReturn_Video.get()))
-        f.write("\ntotal reoceded time: "+ str(Time9025))
-        f.write("\n\n\n\n\nHave a nice dayyyyyyy")
 
         
 
