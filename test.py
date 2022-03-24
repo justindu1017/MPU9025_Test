@@ -1,11 +1,6 @@
-import numpy as np
-
-print(np.linspace(0,20,11,endpoint=True))
-
-
-
-
-
+import time 
+t1  = time.time()
+print(time.time()-t1)
 # import datetime 
 # print(datetime.datetime.now())
 

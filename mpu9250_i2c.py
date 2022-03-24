@@ -10,10 +10,10 @@ import os
 
 def MPU6050_start():
     # alter sample rate (stability)
-    # samp_rate_div = 0  # sample rate = 8 kHz/(1+samp_rate_div)
-    samp_rate_div = 39  # sample rate = 8 kHz/(1+samp_rate_div)
+    samp_rate_div = 0  # sample rate = 8 kHz/(1+samp_rate_div)
+    # samp_rate_div = 39  # sample rate = 8 kHz/(1+samp_rate_div)
 
-    bus.write_byte_data(MPU6050_ADDR, SMPLRT_DIV, samp_rate_div)
+    bus.write_byte_data(MPU6050_ADDR, SMPLRT_DIV, 0)
     time.sleep(0.1)
     # reset all sensors
     bus.write_byte_data(MPU6050_ADDR, PWR_MGMT_1, 0x00)

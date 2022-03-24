@@ -103,14 +103,14 @@ def setPath(path):
 if __name__ == "__main__":
     load_dotenv()
     
-    num_of_Time = 10
+    num_of_points = 1000
     setPath(path=os.getenv("output_Path"))
     video, output = setCamera()
 
     queueReturn_9025 = queue.Queue()
     queueReturn_Video = queue.Queue()
 
-    t = threading.Thread(target=_9025.start, args=(queueReturn_9025, num_of_Time,))
+    t = threading.Thread(target=_9025.start, args=(queueReturn_9025, num_of_points))
     t2 = threading.Thread(target=recorder.main, args=(t,video, output, queueReturn_Video, ))
     t.start()
     t2.start()
@@ -131,7 +131,7 @@ if __name__ == "__main__":
     plotSave(mpu6050_ACCEL_str,mpu6050_GYRO_str,AK8963_str, mpu6050_ACCEL_vec,mpu6050_GYRO_vec,AK8963_vec,t_vec)
     with open(os.getenv("path_csv"), "w") as f:
         f.write("########## The sample rate is: "+ str(sample_rate))
-        f.write("\n########## recorded point: "+ str(num_of_Time))
+        f.write("\n########## recorded point: "+ str(num_of_points))
         f.write("\n########## total reoceded time: "+ str(queueReturn_Video.get()))
         f.write("\n########## total 9025 time: "+ str(Time9025))
         f.write("\n########## time Stemp: "+ str(datetime.datetime.now()))

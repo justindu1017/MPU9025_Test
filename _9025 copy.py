@@ -4,15 +4,15 @@ import numpy as np
 import time
 
 
-def start(queueReturn, nTime):
+def start(queueReturn, points):
 
     # plt.style.use('ggplot') # matplotlib visual style setting
 
     # time.sleep(1) # wait for mpu9250 sensor to settle
 
-    # ii = points # number of points
+    ii = points # number of points
     t1 = time.time() # for calculating sample rate
-    t2 = time.time()
+
     # prepping for visualization
     mpu6050_ACCEL_str = ['accel-x','accel-y','accel-z']
     mpu6050_GYRO_str = ['gyro-x','gyro-y','gyro-z']
@@ -20,20 +20,19 @@ def start(queueReturn, nTime):
     mpu6050_ACCEL_vec,mpu6050_GYRO_vec,AK8963_vec,t_vec = [],[],[],[]
 
     print('geting data')
-    while t2-t1<nTime:
-        t2 = time.time()
+    for ii in range(0,ii):
         try:
             ax,ay,az,wx,wy,wz = mpu6050_conv() # read and convert mpu6050 data
             mx,my,mz = AK8963_conv() # read and convert AK8963 magnetometer data
         except:
             continue
-        t_vec.append(t2) # capture timestamp
+        t_vec.append(time.time()) # capture timestamp
         AK8963_vec.append([mx,my,mz])
         mpu6050_ACCEL_vec.append([ax,ay,az])
         mpu6050_GYRO_vec.append([wx,wy,wz])
     totalTime = time.time()-t1
-    # sample_Rate = ii/(totalTime)
-    print('get points: {}'.format(len(t_vec))) # print the sample rate
+    sample_Rate = ii/(totalTime)
+    print('sample rate accel: {} Hz'.format(sample_Rate)) # print the sample rate
     t_vec = np.subtract(t_vec,t_vec[0])
     # UserWarning: Starting a Matplotlib GUI outside of the main thread will likely fail.
     # return to main thread to plot
@@ -45,7 +44,7 @@ def start(queueReturn, nTime):
     queueReturn.put(mpu6050_GYRO_vec)
     queueReturn.put(AK8963_vec)
     queueReturn.put(t_vec)
-    queueReturn.put(len(t_vec))
+    queueReturn.put(sample_Rate)
     queueReturn.put(totalTime)
     
 
